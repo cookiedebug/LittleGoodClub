@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff9ee">
+  <meta name="description" content="Small, realistic acts of kindness for a brighter everyday. Find a free good deed mission at the Little Good Club.">
+  <title>Little Good Club — Small acts. Big feelings.</title>
+  <style>
+    /* Foundations */
+    :root {
+      color-scheme: light;
+      --cream: #fff9ee;
+      --paper: #fffdf8;
+      --ink: #203b32;
+      --muted: #64746a;
+      --coral: #f36c4f;
+      --coral-dark: #bf422c;
+      --yellow: #ffd85c;
+      --green: #83c987;
+      --green-dark: #32744a;
+      --blue: #cceaf1;
+      --line: rgba(32, 59, 50, .14);
+      --shadow: 0 16px 42px rgba(48, 69, 49, .10);
+      --round: 28px;
+      font-family: "DM Sans", "Avenir Next", Avenir, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    button, a { font: inherit; }
+    a { color: inherit; }
+    button { color: inherit; }
+    :focus-visible { outline: 3px solid #347a58; outline-offset: 4px; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .hero-grid > *, .mission-layout > *, .inspiration-card > *, .safety-card > * { min-width: 0; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--green-dark); font-size: .76rem; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: "✳"; color: var(--coral); font-size: 1.05rem; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 {
+      font-family: "Space Grotesk", "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      line-height: 1.08; letter-spacing: -.045em;
+    }
+    h2 { margin-bottom: 16px; font-size: clamp(2.2rem, 5vw, 3.8rem); }
+    .section-intro { max-width: 620px; margin: 0 auto; color: var(--muted); font-size: 1.08rem; }
+    .section-heading { margin: 0 auto 42px; max-width: 740px; text-align: center; }
+    .btn {
+      min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 13px 22px; border: 0; border-radius: 999px; background: var(--coral-dark);
+      color: #fff; font-weight: 800; text-decoration: none; cursor: pointer;
+      box-shadow: 0 8px 18px rgba(217, 79, 56, .18);
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn:hover { transform: translateY(-3px) scale(1.015); background: #a93624; box-shadow: 0 13px 24px rgba(217, 79, 56, .24); }
+    .btn:active { transform: translateY(-1px) scale(.99); }
+    .btn:disabled { background: var(--green-dark); box-shadow: none; cursor: default; transform: none; }
+    .btn-outline {
+      border: 1px solid var(--line); background: transparent; color: var(--ink);
+      box-shadow: none;
+    }
+    .btn-outline:hover { background: #fff; color: var(--ink); box-shadow: 0 8px 20px rgba(32, 59, 50, .08); }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+    /* Header */
+    .site-header {
+      position: sticky; z-index: 20; top: 0; background: rgba(255, 249, 238, .9);
+      border-bottom: 1px solid rgba(32, 59, 50, .06); backdrop-filter: blur(14px);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 900; letter-spacing: -.05em; font-size: 1.18rem; white-space: nowrap; }
+    .brand-mark {
+      width: 35px; height: 35px; display: grid; place-items: center; border-radius: 12px;
+      background: var(--yellow); color: var(--green-dark); font-size: 1.15rem; transform: rotate(-8deg);
+    }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links > a:not(.btn) { color: var(--ink); font-size: .92rem; font-weight: 700; text-decoration: none; }
+    .nav-links > a:not(.btn):hover { color: var(--coral-dark); }
+    .nav .btn { min-height: 44px; padding: 10px 18px; font-size: .9rem; }
+    .menu-toggle { display: none; }
+
+    /* Hero */
+    .hero { position: relative; padding: clamp(56px, 8vw, 100px) 0 76px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr); align-items: center; gap: 42px; }
+    .hero-copy { position: relative; z-index: 2; }
+    .hero h1 { margin: 18px 0 22px; font-size: clamp(3.55rem, 7.7vw, 6.7rem); font-weight: 800; line-height: .96; }
+    .hero h1 .good { position: relative; display: inline-block; color: var(--coral); }
+    .hero h1 .good::after {
+      content: ""; position: absolute; height: 9px; left: 3px; right: -3px; bottom: -7px;
+      border-top: 4px solid var(--yellow); border-radius: 50%; transform: rotate(-3deg);
+    }
+    .hero-copy > p { max-width: 520px; margin-bottom: 28px; color: var(--muted); font-size: clamp(1.02rem, 1.7vw, 1.2rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+    .hero-note { display: block; margin-top: 18px; color: var(--muted); font-size: .83rem; }
+    .hero-art { min-height: 440px; display: grid; place-items: center; position: relative; }
+    .earth-scene { position: relative; width: min(100%, 495px); aspect-ratio: 1; display: grid; place-items: center; }
+    .earth-halo { position: absolute; width: 78%; height: 78%; border: 1px dashed rgba(50, 116, 74, .25); border-radius: 50%; animation: orbit 50s linear infinite; }
+    .earth {
+      position: relative; z-index: 1; width: 70%; filter: drop-shadow(0 20px 20px rgba(52, 94, 72, .15));
+      animation: float 5s ease-in-out infinite;
+    }
+    .orbit-note {
+      position: absolute; z-index: 2; max-width: 180px; padding: 10px 15px; border: 1px solid rgba(32, 59, 50, .07);
+      border-radius: 18px; background: var(--paper); box-shadow: 0 10px 24px rgba(32, 59, 50, .08);
+      font-size: .79rem; font-weight: 800; line-height: 1.3;
+    }
+    .note-one { top: 9%; right: 2%; transform: rotate(5deg); animation: bob 4s ease-in-out infinite; }
+    .note-two { bottom: 17%; left: -3%; transform: rotate(-5deg); animation: bob 5s ease-in-out infinite reverse; }
+    .note-three { right: 0; bottom: 5%; transform: rotate(3deg); animation: bob 4.5s ease-in-out infinite; }
+    .spark { position: absolute; color: var(--coral); font-size: 1.7rem; animation: twinkle 2.8s ease-in-out infinite; }
+    .spark-a { left: 13%; top: 18%; color: #e6ad18; }
+    .spark-b { right: 13%; bottom: 28%; animation-delay: .8s; }
+    .spark-c { left: 27%; bottom: 8%; color: var(--green-dark); animation-delay: 1.4s; }
+
+    /* Scrolling message ribbon */
+    .ticker { overflow: hidden; background: var(--green-dark); color: #fff; }
+    .ticker-track { width: max-content; display: flex; align-items: center; gap: 30px; padding: 13px 0; animation: ticker 32s linear infinite; }
+    .ticker-group { display: flex; align-items: center; gap: 30px; }
+    .ticker-item { font-weight: 800; font-size: .91rem; white-space: nowrap; }
+    .ticker-item span { padding-left: 28px; color: var(--yellow); }
+
+    /* Mission generator */
+    .missions-section { padding: 110px 0 100px; }
+    .filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0 0 28px; }
+    .filter-btn {
+      min-height: 44px; border: 1px solid var(--line); border-radius: 999px; padding: 9px 17px; background: transparent;
+      color: var(--muted); font-size: .9rem; font-weight: 800; cursor: pointer;
+      transition: background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease;
+    }
+    .filter-btn:hover { transform: translateY(-2px); border-color: var(--green-dark); color: var(--green-dark); }
+    .filter-btn[aria-pressed="true"] { border-color: var(--green-dark); background: var(--green-dark); color: #fff; }
+    .mission-card {
+      position: relative; display: grid; grid-template-columns: minmax(160px, .7fr) minmax(0, 1.6fr);
+      align-items: stretch; gap: clamp(20px, 3vw, 34px); width: min(900px, 100%); margin: 0 auto;
+      padding: clamp(24px, 4vw, 42px); border: 1px solid rgba(32, 59, 50, .08);
+      border-radius: var(--round); background: var(--paper); box-shadow: var(--shadow); overflow: hidden;
+    }
+    .mission-card::after {
+      content: "✳"; position: absolute; right: -9px; top: -25px; color: rgba(255, 216, 92, .35);
+      font-size: 8rem; line-height: 1; transform: rotate(18deg); pointer-events: none;
+    }
+    .mission-card.swap { animation: card-in .38s ease both; }
+    .mission-meta { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 20px; border-radius: 20px; background: #edf6f1; }
+    .mission-content { position: relative; z-index: 1; align-self: center; }
+    .mission-topline { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin-bottom: 18px; }
+    .pill { display: inline-flex; align-items: center; min-height: 29px; padding: 4px 11px; border-radius: 999px; font-size: .74rem; font-weight: 800; }
+    .pill-number { background: #f5efe4; color: var(--muted); }
+    .pill-category { background: var(--blue); color: #285d68; }
+    .pill-time { background: #fff0d4; color: #7d5d12; }
+    .pill-free { background: #e4f4e3; color: var(--green-dark); }
+    .mission-card h3 { position: relative; z-index: 1; max-width: 620px; margin-bottom: 14px; font-size: clamp(1.8rem, 4vw, 2.65rem); }
+    .mission-description { position: relative; z-index: 1; max-width: 630px; margin-bottom: 28px; color: var(--muted); font-size: 1.02rem; }
+    .mission-actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 12px; }
+    .mission-actions .btn { min-height: 48px; }
+    .progress-panel {
+      width: min(900px, 100%); margin: 25px auto 0; display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: center; gap: 20px; padding: 18px 22px;
+      border: 1px solid rgba(32, 59, 50, .09); border-radius: 20px; background: #f1f7ed;
+    }
+    .progress-copy { font-weight: 800; }
+    .progress-copy small { display: block; margin-top: 2px; color: var(--muted); font-size: .78rem; font-weight: 500; }
+    .dots { display: flex; gap: 8px; }
+    .dot { width: 13px; height: 13px; border: 2px solid #a7c7a6; border-radius: 50%; background: transparent; transition: background .35s ease, transform .35s cubic-bezier(.2, 1.8, .4, 1), border-color .35s ease; }
+    .dot.filled { border-color: var(--green-dark); background: var(--green-dark); transform: scale(1.12); }
+    .live-message { min-height: 1.5em; margin: 12px auto 0; color: var(--green-dark); text-align: center; font-size: .9rem; font-weight: 800; }
+
+    /* How it works */
+    .how-section { position: relative; padding: 96px 0 104px; background: var(--yellow); overflow: hidden; }
+    .how-section::before, .how-section::after { content: "✳"; position: absolute; color: rgba(255,255,255,.4); font-size: 11rem; pointer-events: none; }
+    .how-section::before { top: -70px; left: -35px; transform: rotate(20deg); }
+    .how-section::after { bottom: -96px; right: -25px; transform: rotate(-14deg); }
+    .how-section .eyebrow { color: #6a5412; }
+    .how-section .section-intro { color: #675a31; }
+    .steps { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .step-card {
+      min-height: 240px; padding: 28px; border: 1px solid rgba(32, 59, 50, .09); border-radius: 24px;
+      background: rgba(255, 253, 248, .92); box-shadow: 0 14px 28px rgba(116, 91, 10, .08);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .step-card:hover { transform: translateY(-7px) rotate(-.5deg); box-shadow: 0 20px 34px rgba(116, 91, 10, .13); }
+    .step-no { display: inline-grid; place-items: center; width: 42px; height: 42px; margin-bottom: 24px; border-radius: 14px; background: var(--blue); color: #285d68; font-weight: 900; transform: rotate(-5deg); }
+    .step-card:nth-child(2) .step-no { background: #f9d1c7; color: var(--coral-dark); transform: rotate(5deg); }
+    .step-card:nth-child(3) .step-no { background: #d9eed7; color: var(--green-dark); }
+    .step-card h3 { margin-bottom: 10px; font-size: 1.35rem; letter-spacing: -.03em; }
+    .step-card p { margin: 0; color: var(--muted); font-size: .94rem; }
+
+    /* Our inspiration */
+    .inspiration-section { padding: 84px 0 24px; }
+    .inspiration-card {
+      position: relative; display: grid; grid-template-columns: 150px 1fr; gap: 34px;
+      align-items: center; max-width: 940px; margin: 0 auto; padding: clamp(28px, 5vw, 48px);
+      border: 1px solid rgba(32, 59, 50, .08); border-radius: 32px;
+      background: #ffe5dc; box-shadow: 0 18px 38px rgba(116, 91, 10, .07); overflow: hidden;
+    }
+    .inspiration-card::after {
+      content: "✦"; position: absolute; right: 30px; top: 20px; color: rgba(243, 108, 79, .26);
+      font-size: 3.2rem; transform: rotate(12deg); animation: twinkle 3.6s ease-in-out infinite;
+    }
+    .inspiration-mark {
+      position: relative; z-index: 1; display: grid; place-items: center; width: 150px; height: 150px;
+      border: 2px dashed rgba(50, 116, 74, .25); border-radius: 50%; background: #fff9ee;
+      color: var(--coral); font-size: 4.6rem; animation: float 5.5s ease-in-out infinite;
+    }
+    .inspiration-copy { position: relative; z-index: 1; }
+    .inspiration-copy .eyebrow { margin-bottom: 10px; }
+    .inspiration-copy h2 { margin-bottom: 18px; font-size: clamp(2rem, 4vw, 3.1rem); }
+    .inspiration-copy p { margin-bottom: 14px; color: #52675c; font-size: .98rem; }
+    .inspiration-copy p:last-of-type { margin-bottom: 18px; }
+    .creator-credit {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px;
+      border-radius: 999px; background: rgba(255, 253, 248, .82); color: var(--green-dark);
+      font-size: .78rem; font-weight: 800;
+    }
+
+    /* Privacy and safety */
+    .safety-section { padding: 84px 0; }
+    .safety-card { display: grid; grid-template-columns: auto 1fr; gap: 24px; padding: clamp(24px, 4vw, 38px); border: 1px solid #d5e7d2; border-radius: 24px; background: #f1f7ed; }
+    .safety-icon { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 18px; background: #dcefd9; font-size: 1.5rem; }
+    .safety-card h2 { margin: 3px 0 12px; font-size: 1.65rem; letter-spacing: -.035em; }
+    .safety-card p { margin-bottom: 12px; color: #51685a; font-size: .93rem; }
+    .safety-card p:last-child { margin-bottom: 0; font-weight: 700; }
+
+    /* Closing invitation and footer */
+    .closing { padding: 88px 0 94px; background: #d9eff3; text-align: center; overflow: hidden; position: relative; }
+    .closing::before { content: "✦"; position: absolute; top: 18px; left: 10%; color: #f1bd35; font-size: 4rem; transform: rotate(12deg); }
+    .closing::after { content: "✳"; position: absolute; right: 7%; bottom: 18px; color: rgba(243,108,79,.45); font-size: 6rem; }
+    .closing h2 { max-width: 760px; margin: 0 auto 18px; font-size: clamp(2.6rem, 6vw, 4.5rem); }
+    .closing p { max-width: 540px; margin: 0 auto 26px; color: #526e70; font-size: 1.08rem; }
+    .pulse { animation: pulse 2.8s ease-in-out infinite; }
+    .site-footer { padding: 30px 0; background: var(--ink); color: #fff; }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-brand { font-weight: 900; letter-spacing: -.04em; font-size: 1.05rem; }
+    .footer-tagline { margin: 4px 0 0; color: rgba(255,255,255,.68); font-size: .82rem; }
+    .footer-founded { margin: 5px 0 0; color: #ffd85c; font-size: .78rem; font-weight: 700; }
+    .footer-created { margin: 3px 0 0; color: rgba(255,255,255,.78); font-size: .78rem; }
+    .reset-btn { min-height: 44px; border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 9px 14px; background: transparent; color: #fff; font-size: .79rem; font-weight: 700; cursor: pointer; transition: background .2s ease; }
+    .reset-btn:hover { background: rgba(255,255,255,.12); }
+    .toast {
+      position: fixed; z-index: 40; left: 50%; bottom: 24px; width: max-content; max-width: calc(100% - 32px);
+      padding: 14px 19px; border: 1px solid rgba(255,255,255,.24); border-radius: 16px;
+      background: var(--ink); color: #fff; font-weight: 700; box-shadow: 0 14px 36px rgba(25, 45, 37, .25);
+      opacity: 0; pointer-events: none; transform: translate(-50%, 16px) scale(.97);
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    .toast::before { content: "✦"; margin-right: 9px; color: var(--yellow); }
+
+    /* Motion */
+    @keyframes float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-13px) rotate(2deg); } }
+    @keyframes bob { 0%, 100% { margin-top: 0; } 50% { margin-top: -8px; } }
+    @keyframes orbit { to { transform: rotate(360deg); } }
+    @keyframes twinkle { 0%, 100% { opacity: .5; transform: scale(.85) rotate(-10deg); } 50% { opacity: 1; transform: scale(1.12) rotate(10deg); } }
+    @keyframes ticker { to { transform: translateX(-50%); } }
+    @keyframes card-in { from { opacity: .45; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 8px 18px rgba(217, 79, 56, .18); } 50% { box-shadow: 0 8px 25px rgba(217, 79, 56, .33); } }
+    @media (max-width: 1024px) {
+      .wrap { width: min(100% - 56px, 960px); }
+      .hero-grid { gap: 26px; }
+      .hero h1 { font-size: clamp(3.1rem, 6.8vw, 5.2rem); }
+      .hero-art { min-height: 380px; }
+      .missions-section { padding-block: 88px; }
+      .section-heading { margin-bottom: 34px; }
+      .step-card { padding: 24px; }
+      .inspiration-card { gap: 26px; }
+    }
+    @media (max-width: 900px) {
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .step-card:nth-child(3) { grid-column: 1 / -1; }
+      .hero-art { min-height: 340px; }
+    }
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 36px, 600px); }
+      .nav { position: relative; min-height: 68px; gap: 12px; }
+      .menu-toggle {
+        display: inline-flex; flex: 0 0 44px; align-items: center; justify-content: center;
+        width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 14px;
+        background: var(--paper); color: var(--ink); font-size: 1.25rem; cursor: pointer;
+      }
+      .nav-links {
+        position: absolute; top: calc(100% + 7px); right: 0; display: none; flex-direction: column;
+        align-items: stretch; gap: 4px; width: min(260px, calc(100vw - 32px)); padding: 10px;
+        border: 1px solid var(--line); border-radius: 18px; background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+      .nav-links.is-open { display: flex; }
+      .nav-links > a:not(.btn) { display: flex; align-items: center; min-height: 44px; padding: 8px 12px; }
+      .nav .btn { min-height: 44px; }
+      .hero { padding: 48px 0 56px; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+      .hero-copy { text-align: center; }
+      .hero-copy > p { margin-inline: auto; }
+      .hero-actions { justify-content: center; }
+      .hero-art { min-height: 320px; }
+      .earth-scene { width: min(100%, 340px); }
+      .missions-section { padding: 76px 0; }
+      .mission-card { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+      .mission-meta { flex-direction: row; flex-wrap: wrap; align-items: center; padding: 12px; }
+      .mission-topline { margin-bottom: 14px; }
+      .mission-content { align-self: auto; }
+      .how-section { padding: 76px 0; }
+      .steps { grid-template-columns: minmax(0, 1fr); }
+      .step-card, .step-card:nth-child(3) { grid-column: auto; min-height: 0; }
+      .inspiration-section { padding-top: 64px; }
+      .inspiration-card { grid-template-columns: minmax(0, 1fr); text-align: center; }
+      .inspiration-mark { width: 112px; height: 112px; margin-inline: auto; font-size: 3.5rem; }
+      .inspiration-copy .eyebrow { justify-content: center; }
+      .safety-section { padding: 64px 0; }
+      .footer-row { align-items: flex-start; }
+      .closing { padding: 72px 0; }
+    }
+    @media (max-width: 480px) {
+      .wrap { width: calc(100% - 32px); }
+      .brand { gap: 7px; font-size: .98rem; }
+      .brand-mark { width: 32px; height: 32px; }
+      .hero h1 { font-size: clamp(2.85rem, 14vw, 4rem); }
+      .hero-actions .btn, .closing .btn { width: 100%; min-height: 48px; }
+      .hero-art { min-height: 270px; }
+      .earth-scene { width: min(100%, 290px); }
+      .earth { width: 66%; }
+      .orbit-note { max-width: 112px; padding: 7px 9px; font-size: .64rem; }
+      .note-one { right: 0; }
+      .note-two { left: -1%; bottom: 14%; }
+      .note-three { right: -1%; bottom: 0; }
+      .spark { font-size: 1.2rem; }
+      .filters { justify-content: flex-start; gap: 7px; }
+      .filter-btn { min-height: 44px; padding: 8px 12px; font-size: .82rem; }
+      .mission-card { padding: 20px; }
+      .mission-meta { gap: 7px; padding: 10px; }
+      .pill { font-size: .7rem; }
+      .mission-actions { flex-direction: column; }
+      .mission-actions .btn { width: 100%; min-height: 48px; }
+      .progress-panel { align-items: flex-start; padding: 16px; }
+      .progress-copy { max-width: 100%; }
+      .dots { align-self: center; gap: 6px; }
+      .dot { width: 11px; height: 11px; }
+      .safety-card { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+      .footer-row { flex-direction: column; }
+      .reset-btn { min-height: 44px; padding-inline: 16px; }
+      .closing::before { left: 2%; font-size: 2.8rem; }
+      .closing::after { right: 1%; font-size: 4rem; }
+      .inspiration-card { padding: 24px 20px; }
+      .creator-credit { line-height: 1.4; }
+      .earth, .inspiration-mark { animation-duration: 8s; }
+      .orbit-note { animation-duration: 7s; }
+      .ticker-track { animation-duration: 45s; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="Little Good Club home">
+        <span class="brand-mark" aria-hidden="true">✿</span><span>little good club</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Open navigation menu">
+        <span aria-hidden="true">☰</span>
+      </button>
+      <div class="nav-links" id="primary-links">
+        <a href="#how">How it works</a>
+        <a class="btn" href="#missions">Do a little good <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-grid wrap">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">A tiny nudge toward a kinder world</span>
+          <h1>Big world.<br>Little you.<br>Lots of <span class="good">good.</span></h1>
+          <p>You don’t need a cape to make a difference. Just a few minutes, a little heart, and somewhere to start.</p>
+          <div class="hero-actions">
+            <a class="btn pulse" href="#missions">Find my first mission <span aria-hidden="true">↗</span></a>
+          </div>
+          <small class="hero-note">Free to join. No account. Good vibes, actually useful.</small>
+        </div>
+        <div class="hero-art reveal" aria-label="A cheerful illustrated Earth">
+          <div class="earth-scene">
+            <div class="earth-halo" aria-hidden="true"></div>
+            <span class="spark spark-a" aria-hidden="true">✦</span>
+            <span class="spark spark-b" aria-hidden="true">✧</span>
+            <span class="spark spark-c" aria-hidden="true">✳</span>
+            <div class="orbit-note note-one">A better world starts small.</div>
+            <div class="orbit-note note-two">Less scroll. More soul.</div>
+            <div class="orbit-note note-three">Earth called. It’s rooting for you.</div>
+            <svg class="earth" viewBox="0 0 400 400" role="img" aria-labelledby="earth-title">
+              <title id="earth-title">Smiling Earth surrounded by little stars</title>
+              <defs>
+                <clipPath id="globeClip"><circle cx="200" cy="200" r="151"/></clipPath>
+                <linearGradient id="ocean" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#81d4df"/><stop offset="1" stop-color="#4ea8bb"/></linearGradient>
+              </defs>
+              <circle cx="200" cy="200" r="166" fill="#ffd85c" opacity=".58"/>
+              <circle cx="200" cy="200" r="151" fill="url(#ocean)"/>
+              <g clip-path="url(#globeClip)" fill="#83c987">
+                <path d="M75 132l19-21 25-8 20 13 3 19-17 13-7 22-22 8-7 24-19-7-13-22 6-24z"/>
+                <path d="M137 212l24 2 17 20-6 28-14 17-4 36-19 31-15-13 3-36-14-27 4-27z"/>
+                <path d="M212 87l27-7 15 13 26-3 13 15 24 6 8 20-17 12-25-3-15 18-21-5-8-18-22-5-9-17-20-4z"/>
+                <path d="M232 183l23-12 30 9 10 17 25 10 5 26-17 20-2 29-19 19-16-9-2-29-14-18-19-5-10-25z"/>
+                <path d="M104 72l18-11 17 9-4 16-22 5zM300 298l17-5 12 13-9 14-17-3z"/>
+              </g>
+              <circle cx="200" cy="200" r="151" fill="none" stroke="#fff9ee" stroke-width="7"/>
+              <ellipse cx="153" cy="183" rx="8" ry="12" fill="#203b32"/>
+              <ellipse cx="244" cy="183" rx="8" ry="12" fill="#203b32"/>
+              <path d="M164 220q36 39 72 0" fill="none" stroke="#203b32" stroke-width="8" stroke-linecap="round"/>
+              <circle cx="132" cy="209" r="13" fill="#f28b78" opacity=".75"/>
+              <circle cx="270" cy="209" r="13" fill="#f28b78" opacity=".75"/>
+              <path d="M332 124l10-17 10 17 17 10-17 10-10 17-10-17-17-10z" fill="#f36c4f"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scrolling message strip -->
+    <div class="ticker" aria-label="Small acts count. Kindness is contagious. Progress, not perfection.">
+      <div class="ticker-track" aria-hidden="true">
+        <div class="ticker-group">
+          <span class="ticker-item">Small acts count <span>✳</span></span><span class="ticker-item">Kindness is contagious <span>✳</span></span><span class="ticker-item">Progress, not perfection <span>✳</span></span><span class="ticker-item">Good grows here <span>✳</span></span>
+        </div>
+        <div class="ticker-group">
+          <span class="ticker-item">Small acts count <span>✳</span></span><span class="ticker-item">Kindness is contagious <span>✳</span></span><span class="ticker-item">Progress, not perfection <span>✳</span></span><span class="ticker-item">Good grows here <span>✳</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mission generator and progress tracker -->
+    <section class="missions-section" id="missions">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Your next tiny-big thing</span>
+          <h2>A small mission.<br>A real difference.</h2>
+          <p class="section-intro">Pick your kind of good. We’ll handle the “where do I start?”</p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter missions by category">
+          <button class="filter-btn" type="button" data-category="Anything" aria-pressed="true">Anything</button>
+          <button class="filter-btn" type="button" data-category="People" aria-pressed="false">People</button>
+          <button class="filter-btn" type="button" data-category="Planet" aria-pressed="false">Planet</button>
+          <button class="filter-btn" type="button" data-category="Community" aria-pressed="false">Community</button>
+        </div>
+        <article class="mission-card" id="mission-card" aria-labelledby="mission-title">
+          <div class="mission-meta" aria-label="Mission information">
+            <span class="pill pill-number" id="mission-number">MISSION 01</span>
+            <span class="pill pill-category" id="mission-category">People</span>
+            <span class="pill pill-time" id="mission-time">5–10 min</span>
+            <span class="pill pill-free">Free</span>
+          </div>
+          <div class="mission-content">
+            <div class="mission-topline">
+              <span class="eyebrow">Your little good for today</span>
+            </div>
+            <h3 id="mission-title">Send a “you made my day” text.</h3>
+            <p class="mission-description" id="mission-description">Think of someone who made your life a little brighter. Tell them what they did and why it mattered. Specific kindness hits different.</p>
+            <div class="mission-actions">
+              <button class="btn" id="complete-btn" type="button">I did this! <span aria-hidden="true">✓</span></button>
+              <button class="btn btn-outline" id="another-btn" type="button">Give me another <span aria-hidden="true">↻</span></button>
+            </div>
+          </div>
+        </article>
+        <div class="progress-panel" aria-label="Your kindness progress">
+          <div class="progress-copy" id="progress-copy">0 little acts of good — your story starts here.
+            <small id="milestone-copy">Your next little milestone: 7 acts</small>
+          </div>
+          <div class="dots" id="progress-dots" role="img" aria-label="0 of 7 acts toward your next milestone">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+        </div>
+        <p class="live-message" id="live-message" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-section" id="how">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Easy as one, two, woo</span>
+          <h2>Make good your thing.</h2>
+          <p class="section-intro">No grand gestures needed. Just small good things, done your way.</p>
+        </div>
+        <div class="steps">
+          <article class="step-card reveal">
+            <span class="step-no">01</span>
+            <h3>Find your spark</h3>
+            <p>Pick a small mission that feels meaningful and realistic. Your good, your pace.</p>
+          </article>
+          <article class="step-card reveal">
+            <span class="step-no">02</span>
+            <h3>Take it offline</h3>
+            <p>Complete it in the real world. No photo proof or public performance is required.</p>
+          </article>
+          <article class="step-card reveal">
+            <span class="step-no">03</span>
+            <h3>Keep it going</h3>
+            <p>Log your little win and return whenever you want another mission.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Inspiration -->
+    <section class="inspiration-section" id="our-inspiration">
+      <div class="wrap">
+        <article class="inspiration-card reveal" aria-labelledby="inspiration-title">
+          <div class="inspiration-mark" aria-hidden="true">♥</div>
+          <div class="inspiration-copy">
+            <span class="eyebrow">The story behind the good</span>
+            <h2 id="inspiration-title">Small care can reach a long way.</h2>
+            <p>Little Good Club was created by Jaden Ayim Kweku. The idea was inspired by the many people who quietly go through difficult moments without feeling comfortable sharing what they are experiencing. Sometimes, a small act of kindness can make a meaningful difference. A thoughtful message, a genuine compliment, or a simple helpful action can brighten someone’s day and remind them that they are seen, valued, and not alone.</p>
+            <p>Little Good Club encourages people to complete small kindness missions that can put a smile on someone’s face and create positive ripples in the community. The goal is to show that making the world a better place does not always require a huge action—sometimes, one small good deed is enough to make someone’s day better.</p>
+            <span class="creator-credit"><span aria-hidden="true">✿</span> Created by Jaden Ayim Kweku</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Privacy and safety -->
+    <section class="safety-section">
+      <div class="wrap">
+        <aside class="safety-card reveal" aria-labelledby="safety-title">
+          <div class="safety-icon" aria-hidden="true">🫶</div>
+          <div>
+            <h2 id="safety-title">Kindness, with care.</h2>
+            <p>No account is required, and please don’t share sensitive personal information here. Keep yourself and others safe: avoid sharp or dangerous objects, and only volunteer through trusted organizations.</p>
+            <p>Little Good Club is a demo. It doesn’t verify missions or users. Kindness should never put anyone’s safety or privacy at risk—choose another mission whenever something doesn’t feel right.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Closing invitation -->
+    <section class="closing">
+      <div class="wrap reveal">
+        <span class="eyebrow">Pass the good around</span>
+        <h2>The world doesn’t need perfect.<br>It needs a little more you.</h2>
+        <p>Invite a friend. Good things grow when we share them.</p>
+        <button class="btn pulse" id="share-btn" type="button">Spread a little good <span aria-hidden="true">↗</span></button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <div>
+        <div class="footer-brand">little good club <span aria-hidden="true">✿</span></div>
+        <p class="footer-tagline">Small acts. Big feelings. A better everyday.</p>
+        <p class="footer-founded">Little Good Club — founded by Jaden Ayim Kweku.</p>
+        <p class="footer-created">Created with care by Jaden Ayim Kweku.</p>
+      </div>
+      <button class="reset-btn" id="reset-btn" type="button">Reset saved progress</button>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Mission data: all actions are free, small, and designed to take 5–15 minutes.
+    const missions = [
+      { category: "People", time: "5–10 min", title: "Send a “you made my day” text.", description: "Think of someone who made your life a little brighter. Tell them what they did and why it mattered. Specific kindness hits different." },
+      { category: "People", time: "5–10 min", title: "Check in on a friend.", description: "Send a simple “How are you, really?” and give them room to answer. A little listening can mean a lot." },
+      { category: "People", time: "5 min", title: "Give someone a sincere compliment.", description: "Notice something specific you genuinely appreciate— their patience, their laugh, or the care they put into something—and tell them." },
+      { category: "People", time: "10 min", title: "Listen without interrupting.", description: "Ask someone about their day and give them your full attention. No fixing, no phone, just a few minutes of being there." },
+      { category: "Planet", time: "5–10 min", title: "Pick up a little litter safely.", description: "On a familiar route, collect a few pieces of litter only if it’s safe. Leave anything sharp, hazardous, or questionable where it is." },
+      { category: "Planet", time: "10 min", title: "Give one item a second life.", description: "Find something clean and useful you no longer need. Set it aside to donate, pass it to someone, or list it in a trusted local reuse group." },
+      { category: "Planet", time: "10–15 min", title: "Use up something in your fridge.", description: "Check what needs eating soon and plan a snack or meal around it. Small food-waste wins count." },
+      { category: "Planet", time: "5–10 min", title: "Take a mindful walk nearby.", description: "Choose a short familiar route, notice the plants and wildlife, and leave the place as you found it. A little care starts with noticing." },
+      { category: "Community", time: "10 min", title: "Leave a thoughtful local review.", description: "Write a kind, honest review for a neighborhood place you appreciate. Mention one specific thing that made your visit better." },
+      { category: "Community", time: "10–15 min", title: "Find a trusted local volunteer group.", description: "Look up a community organization through its official website or a trusted directory. Save one opportunity that fits your time and interests." },
+      { category: "Community", time: "5–10 min", title: "Share something useful with a neighbor.", description: "Pass along a helpful local resource, a community notice, or a recommendation in a group you already trust." },
+      { category: "Community", time: "5–10 min", title: "Make a small thank-you note.", description: "Write a quick note to someone who helps your community—a crossing guard, librarian, or building caretaker—and share it if that feels welcome." }
+    ];
+
+    const storageKey = "littleGoodClub.completedActs";
+    const lastCompletedMissionKey = "littleGoodClub.lastCompletedMission";
+    const shareMessage = "Join me in doing a little good! Find a small, free kindness mission at Little Good Club.";
+    const card = document.getElementById("mission-card");
+    const completeButton = document.getElementById("complete-btn");
+    const toast = document.getElementById("toast");
+    const menuToggle = document.getElementById("menu-toggle");
+    const primaryLinks = document.getElementById("primary-links");
+    let activeCategory = "Anything";
+    let activeMissionIndex = 0;
+    let lastCompletedMissionIndex = null;
+    let completedCount = 0;
+    let missionCompleted = false;
+    let toastTimer;
+
+    function setMenuOpen(isOpen) {
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+      menuToggle.querySelector("span").textContent = isOpen ? "×" : "☰";
+      primaryLinks.classList.toggle("is-open", isOpen);
+    }
+
+    menuToggle.addEventListener("click", () => {
+      setMenuOpen(menuToggle.getAttribute("aria-expanded") !== "true");
+    });
+    primaryLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => setMenuOpen(false));
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && menuToggle.getAttribute("aria-expanded") === "true") {
+        setMenuOpen(false);
+        menuToggle.focus();
+      }
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    function loadProgress() {
+      try {
+        const saved = window.localStorage.getItem(storageKey);
+        const parsed = saved === null ? 0 : Number(saved);
+        if (!Number.isSafeInteger(parsed) || parsed < 0) throw new Error("Saved progress is invalid.");
+        completedCount = parsed;
+        const savedMission = window.localStorage.getItem(lastCompletedMissionKey);
+        if (savedMission !== null) {
+          const parsedMission = Number(savedMission);
+          if (!Number.isSafeInteger(parsedMission) || parsedMission < 0 || parsedMission >= missions.length) {
+            throw new Error("Saved mission is invalid.");
+          }
+          lastCompletedMissionIndex = parsedMission;
+        }
+      } catch (error) {
+        completedCount = 0;
+        showToast("Progress couldn’t be read from this browser. You can still play along.");
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const progressCopy = document.getElementById("progress-copy");
+      const milestoneCopy = document.getElementById("milestone-copy");
+      const dots = [...document.querySelectorAll(".dot")];
+      const remainder = completedCount % 7;
+      progressCopy.firstChild.textContent = completedCount === 0
+        ? "0 little acts of good — your story starts here."
+        : `${completedCount} little act${completedCount === 1 ? "" : "s"} of good — look at you, making a difference.`;
+      milestoneCopy.textContent = completedCount === 0
+        ? "Your next little milestone: 7 acts"
+        : remainder === 0 ? "Milestone reached! Here’s to the next 7."
+          : `${7 - remainder} more ${7 - remainder === 1 ? "act" : "acts"} to your next milestone`;
+      dots.forEach((dot, index) => dot.classList.toggle("filled", index < remainder));
+      document.getElementById("progress-dots").setAttribute("aria-label", `${remainder} of 7 acts toward your next milestone`);
+    }
+
+    function availableMissionIndices() {
+      return missions.map((mission, index) => ({ mission, index }))
+        .filter(({ mission }) => activeCategory === "Anything" || mission.category === activeCategory)
+        .map(({ index }) => index);
+    }
+
+    function renderMission(index) {
+      activeMissionIndex = index;
+      missionCompleted = false;
+      const mission = missions[index];
+      document.getElementById("mission-number").textContent = `MISSION ${String(index + 1).padStart(2, "0")}`;
+      document.getElementById("mission-category").textContent = mission.category;
+      document.getElementById("mission-time").textContent = mission.time;
+      document.getElementById("mission-title").textContent = mission.title;
+      document.getElementById("mission-description").textContent = mission.description;
+      completeButton.disabled = false;
+      completeButton.innerHTML = 'I did this! <span aria-hidden="true">✓</span>';
+      document.getElementById("live-message").textContent = "";
+      card.classList.remove("swap");
+      void card.offsetWidth;
+      card.classList.add("swap");
+    }
+
+    function chooseMission(avoidCurrent = true) {
+      const choices = availableMissionIndices();
+      const alternatives = choices.length > 1 ? choices.filter(index => index !== activeMissionIndex) : choices;
+      const pool = avoidCurrent && alternatives.length ? alternatives : choices;
+      renderMission(pool[Math.floor(Math.random() * pool.length)]);
+    }
+
+    document.querySelectorAll(".filter-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        activeCategory = button.dataset.category;
+        document.querySelectorAll(".filter-btn").forEach(filter => {
+          filter.setAttribute("aria-pressed", String(filter === button));
+        });
+        chooseMission(false);
+      });
+    });
+
+    document.getElementById("another-btn").addEventListener("click", () => chooseMission(true));
+
+    completeButton.addEventListener("click", () => {
+      if (missionCompleted) return;
+      missionCompleted = true;
+      completedCount += 1;
+      completeButton.disabled = true;
+      completeButton.innerHTML = 'Little good, done! <span aria-hidden="true">✓</span>';
+      lastCompletedMissionIndex = activeMissionIndex;
+      updateProgress();
+      document.getElementById("live-message").textContent = "That little act matters. Thanks for putting good into the world!";
+      try {
+        window.localStorage.setItem(storageKey, String(completedCount));
+        window.localStorage.setItem(lastCompletedMissionKey, String(activeMissionIndex));
+        showToast("Little good, done! That counts. ✨");
+      } catch (error) {
+        showToast("Mission complete! Progress couldn’t be saved in this browser.");
+      }
+    });
+
+    document.getElementById("reset-btn").addEventListener("click", () => {
+      if (!window.confirm("Reset your saved little acts of good? This can’t be undone.")) return;
+      try {
+        window.localStorage.removeItem(storageKey);
+        window.localStorage.removeItem(lastCompletedMissionKey);
+        completedCount = 0;
+        lastCompletedMissionIndex = null;
+        updateProgress();
+        document.getElementById("live-message").textContent = "Fresh start. Your next little good is waiting.";
+        showToast("Progress reset. Your story can start again!");
+      } catch (error) {
+        showToast("Your browser couldn’t reset saved progress. Please check its storage settings.");
+      }
+    });
+
+    async function shareInvitation() {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: "Little Good Club", text: shareMessage });
+          showToast("Thanks for passing a little good along!");
+          return;
+        } catch (error) {
+          if (error.name === "AbortError") return;
+        }
+      }
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error("Clipboard unavailable.");
+        await navigator.clipboard.writeText(shareMessage);
+        showToast("Invitation copied! Send a little good to a friend.");
+      } catch (error) {
+        window.prompt("Copy this invitation and share a little good:", shareMessage);
+      }
+    }
+    document.getElementById("share-btn").addEventListener("click", shareInvitation);
+
+    // Reveal-on-scroll is progressively enhanced; all content remains visible without IntersectionObserver.
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
+    } else {
+      document.querySelectorAll(".reveal").forEach(element => element.classList.add("is-visible"));
+    }
+
+    loadProgress();
+    const initialMission = lastCompletedMissionIndex === activeMissionIndex
+      ? availableMissionIndices().find(index => index !== activeMissionIndex)
+      : activeMissionIndex;
+    renderMission(initialMission ?? activeMissionIndex);
+  </script>
+</body>
+</html>
